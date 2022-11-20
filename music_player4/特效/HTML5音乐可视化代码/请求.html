@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      //
+      function getFileFromUrl(url, fileName) {
+        return new Promise((resolve, reject) => {
+          var blob = null;
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', url);
+          xhr.setRequestHeader('Accept', 'audio/mpeg');
+          xhr.responseType = 'blob';
+          // 加载时处理
+          xhr.onload = () => {
+            // 获取返回结果
+            blob = xhr.response;
+            let file = new File([blob], fileName, { type: 'audio/mpeg' });
+            // 返回结果
+            resolve(file);
+          };
+          xhr.onerror = e => {
+            reject(e);
+          };
+          // 发送
+          xhr.send();
+        });
+      }
+
+      let file = null;
+      this.getFileFromUrl(
+        'http://m7.music.126.net/20220906223455/ee298d5de1052c660fa753868c1a3915/ymusic/0fd6/4f65/43ed/a8772889f38dfcb91c04da915b301617.mp3',
+        'ds'
+      )
+        .then(response => {
+          file = response;
+          console.log(file);
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    </script>
+  </body>
+</html>

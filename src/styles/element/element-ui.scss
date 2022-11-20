@@ -1,0 +1,84 @@
+// cover some element-ui styles
+
+// 调整位置
+// .el-message {
+//   top: 400px;
+//   font-size: 20px;
+//   padding: 10px;
+// }
+
+// 让滚动条向右点
+.el-scrollbar {
+  overflow: visible;
+
+  .el-scrollbar__view {
+    padding: 16px 16px 0;
+  }
+
+  .el-scrollbar__bar.is-vertical {
+    transform: translateY(20px);
+  }
+}
+
+// 取消滑块
+.el-slider {
+  .el-slider__button {
+    display: none;
+  }
+}
+
+.el-drawer,
+.el-drawer__title {
+  font-size: 16px;
+}
+
+.el-drawer {
+  border-radius: 26px;
+}
+
+.el-breadcrumb__inner,
+.el-breadcrumb__inner a {
+  font-weight: 400 !important;
+}
+
+.el-upload {
+  input[type='file'] {
+    display: none !important;
+  }
+}
+
+.el-upload__input {
+  display: none;
+}
+
+// to fixed https://github.com/ElemeFE/element/issues/2461
+.el-dialog {
+  position: relative;
+  left: 0;
+  margin: 0 auto;
+  transform: none;
+}
+
+// refine element ui upload
+.upload-container {
+  .el-upload {
+    width: 100%;
+
+    .el-upload-dragger {
+      width: 100%;
+      height: 200px;
+    }
+  }
+}
+
+// dropdown
+.el-dropdown-menu {
+  a {
+    display: block;
+  }
+}
+
+// to fix el-date-picker css style
+.el-range-separator {
+  box-sizing: content-box;
+}

@@ -1,0 +1,33 @@
+/* 
+  @function 文字居中
+  @describe 文字垂直居中和水平垂直居中
+  @params identification{String} 居中类别
+  @params height{Number} 元素高度
+  @return void
+*/
+@mixin textCenter($identification, $height: 12px) {
+  @if $identification == 'hv' {
+    height: $height;
+    text-align: center;
+  } @else if $identification == 'v' {
+    height: $height;
+  }
+  line-height: $height;
+}
+
+/* 
+  播放次数
+*/
+@mixin songSheetTag($position...) {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  @each $key, $val in keywords($position) {
+    #{$key}: $val;
+  }
+  padding: 3px 4px;
+  background-color: rgba($color: #000, $alpha: 0.4);
+  border-radius: var(--el-border-radius-round);
+  color: var(--el-color-white);
+  font-size: 12px;
+}

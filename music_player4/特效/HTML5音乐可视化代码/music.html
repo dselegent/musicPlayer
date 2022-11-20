@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="scripts/anime.min.js"></script>
+    <script src="scripts/color.js"></script>
+  </head>
+  <body>
+    <button id="play">播放</button>
+    <button id="pause">暂停</button>
+    <button id="resume">恢复</button>
+    <button id="next">下一首</button>
+    <button type="button" class="add">音量+</button>
+    <button type="button" class="lost">音量-</button>
+    <div class="stage"></div>
+    <script>
+      //创建对象
+      const AudioContext =
+        window.AudioContext ||
+        window.webkitAudioContext ||
+        window.mozAudioContext ||
+        window.msAudioContext;
+
+      //形成动画
+      let animeDiv = function (audioInfoArray) {
+        let stageDivEl = document.querySelector('.stage');
+        for (let i = 0; i < stageDivEl.children.length; i++) {
+          if (audioInfoArray[i] == 0) {
+            audioInfoArray[i] = 4;
+          }
+          anime({
+            targets: stageDivEl.children[i],
+            height: [audioInfoArray[i] / 3],
+            duration: 1,
+          });
+        }
+      };
+
+      //加载音乐波形分析器
+      let getMusicData = function () {
+        webkitRequestAnimationFrame(getMusicData);
+        let bufferLength = analyser.frequencyBinCount;
+        audioInfoArray = new Uint8Array(bufferLength);
+        analyser.getByteFrequencyData(audioInfoArray);
+        animeDiv(audioInfoArray);
+      };
+
+      let play = async num => {
+        //创建环境
+        let audioCtx = new AudioContext();
+        let audioBufferSourceNode = null;
+        // 频率及时间域分析器，声音可视化就用这个
+        let analyser = audioCtx.createAnalyser();
+        //音量变更模块
+        let gainNode = audioCtx.createGain();
+        let audioInfoArray = null;
+
+        if (audioBufferSourceNode != null) {
+          audioBufferSourceNode.stop();
+        }
+        audioBufferSourceNode = null;
+
+        // 通过ajax读取音乐文件的rawData，然后转成ArrayBuffer
+        let musicArrayBuffer = await fetch(
+          'http://m701.music.126.net/20220928223726/7117b679c6c0f23390fc8d6d1ec1a52d/jdymusic/obj/wo3DlMOGwrbDjj7DisKw/18487357876/9d54/c285/0c14/34e2aca07656b3537212c15361a307b1.mp3'
+        ).then(r => r.arrayBuffer());
+        // 将音频的ArrayBuffer解码成AudioBuffer
+        let buffer = await audioCtx.decodeAudioData(musicArrayBuffer);
+        // 音频时间
+        // console.log(buffer.duration);
+        // 通过connect方法从音频源连接到AudioNode处理模块，再连接到输出设备，
+        // 当我们修改前面的模块时，就会影响到后面AudioNode，以及我们最终听见的声音
+        // 创建对象，用过AudioBuffer对象来播放音频数据
+        //创建源
+        audioBufferSourceNode = audioCtx.createBufferSource();
+        audioBufferSourceNode.buffer = buffer;
+        // 将source与analyser分析器连接
+        audioBufferSourceNode.connect(analyser);
+        // 将analyser与gainNode分析器连接
+        audioBufferSourceNode.connect(gainNode);
+        // 表示 context 的最终节点，一般是音频渲染设备
+        gainNode.connect(audioCtx.destination);
+        // 循环播放
+        audioBufferSourceNode.loop = false;
+        audioBufferSourceNode.start(0, num);
+        // 单曲循环时没用
+        audioBufferSourceNode.onended = () => {
+          console.log('结束');
+        };
+        getMusicData();
+      };
+
+      //初始化div
+      let initDiv = function (num, r) {
+        const winWidth = document.documentElement.clientWidth;
+        const winHeight = document.documentElement.clientHeight - 400;
+        // const winWidth = 400;
+        // const winHeight = 400;
+        const avd = 360 / num;
+        const ahd = (avd * Math.PI) / 180;
+        let stageDivEl = document.querySelector('.stage');
+        for (let i = 0; i < num; i++) {
+          let divEl = document.createElement('div');
+          // const color = gradientColor('#16a5a3', '#da2864', i, num);
+          const color = gradientColor('#ecf5ff', '#409eff', i, num);
+          divEl.setAttribute(
+            'style',
+            'background-color:' + color + ';box-shadow:0px 0px 10px' + color
+          );
+          divEl.classList.add('el');
+          stageDivEl.append(divEl);
+          anime({
+            targets: divEl,
+            translateX: [winWidth / 2, winWidth / 2 + Math.sin(ahd * i) * r],
+            translateY: [winHeight / 2, winHeight / 2 + Math.cos(ahd * i) * r],
+            rotate: [-avd * i],
+            loop: false,
+            duration: 1,
+          });
+        }
+      };
+      // initDiv(60, 100);
+      initDiv(50, 80);
+
+      document.querySelector('#play').addEventListener('click', async () => {
+        await play(80);
+      });
+      document.querySelector('#pause').addEventListener('click', async () => {
+        await audioBufferSourceNode.stop();
+        // await audioCtx.suspend();
+      });
+
+      document.querySelector('#resume').addEventListener('click', async () => {
+        await play(100);
+
+        // await audioCtx.resume();
+      });
+      document.querySelector('#next').addEventListener('click', async () => {
+        await play();
+      });
+
+      document.querySelector('.add').addEventListener('click', () => {
+        // //修改value的大小，改变输出大小，默认是1,0表示静音
+        gainNode.gain.value += 0.1;
+      });
+
+      document.querySelector('.lost').addEventListener('click', () => {
+        gainNode.gain.value -= 0.1;
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS仿酷狗歌词文字聚光灯特效 - 站长素材</title>
+
+<style>
+	body {
+		margin: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #222;
+		min-height: 100vh;
+	}
+
+	h2 {
+		font-size: 3rem;
+		color:#333;
+		position: relative;
+	}
+
+	h2::after {
+		content: attr(light);
+		position: absolute;
+		top: 0;
+		left: 0;
+		color: transparent;
+		clip-path: ellipse(100px 100px at 0% 50%);
+		animation: SpotLight 5s infinite;
+		background-image: url("img/160989854578037_2.jpg");
+		background-size: 150%;
+		background-position: center center;
+		-webkit-background-clip: text;
+		background-clip: text;
+	}
+
+	@keyframes SpotLight {
+		0% {
+			clip-path: ellipse(100px 100px at 0% 50%);
+		}
+
+		50% {
+			clip-path: ellipse(100px 100px at 100% 50%);
+		}
+
+		100% {
+			clip-path: ellipse(100px 100px at 0% 50%);
+		}
+	}
+</style>
+
+</head>
+<body>
+
+<h2 light="我静静站在那里，与雪山相融，与冰天接壤。">我静静站在那里，与雪山相融，与冰天接壤。</h2>
+
+</body>
+</html>

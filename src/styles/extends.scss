@@ -1,0 +1,71 @@
+/*
+  单行文字溢出显示省略号
+*/
+.textEllipsis {
+  overflow: hidden;
+
+  /* 文字超出宽度则显示ellipsis省略号 */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 图片缩放效果
+%imgScale {
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+// 图片中间显示播放图标
+%playIconCenter {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 99;
+    display: none;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-left-color: var(--el-color-primary);
+    content: '';
+    transform: translate(-15%, -50%);
+  }
+
+  &::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: none;
+    width: 36px;
+    height: 36px;
+    background-color: rgba($color: #fff, $alpha: 70%);
+    border-radius: 50%;
+    content: '';
+    transform: translate(-50%, -50%);
+  }
+
+  &:hover::before,
+  &:hover::after {
+    display: block;
+  }
+}
+
+/*
+  首页查看更多
+*/
+%homeMore {
+  font-size: 12px;
+
+  :deep(.el-link) {
+    color: var(--el-text-color-secondary);
+
+    &:hover {
+      color: var(--el-link-hover-text-color);
+    }
+  }
+}
